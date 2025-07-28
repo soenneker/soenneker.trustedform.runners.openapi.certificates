@@ -2,5 +2,5 @@
 
 public static class Constants
 {
-    public const string Library = "Soenneker.TrustedForm.OpenApi.Certificates";
+    public const string Library = "Soenneker.TrustedForm.Certificates.OpenApiClient";
 }
