@@ -5,19 +5,21 @@ using Soenneker.Extensions.ValueTask;
 using Soenneker.Git.Util.Abstract;
 using Soenneker.Playwright.Installation;
 using Soenneker.Playwright.Installation.Abstract;
+using Soenneker.Playwrights.Extensions.Stealth;
 using Soenneker.TrustedForm.Runners.OpenApi.Certificates.Utils.Abstract;
 using Soenneker.Utils.Dotnet.Abstract;
 using Soenneker.Utils.Environment;
 using Soenneker.Utils.File.Abstract;
+using Soenneker.Utils.Json;
 using Soenneker.Utils.Path;
 using Soenneker.Utils.Path.Abstract;
 using Soenneker.Utils.Process.Abstract;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Soenneker.Utils.Json;
 
 namespace Soenneker.TrustedForm.Runners.OpenApi.Certificates.Utils;
 
@@ -48,15 +50,19 @@ public sealed class FileOperationsUtil : IFileOperationsUtil
     {
         await _playwrightInstallationUtil.EnsureInstalled(cancellationToken);
 
-        IPlaywright playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-        IBrowser browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions {Channel = "chromium"});
-        IBrowserContext context = await browser.NewContextAsync(new BrowserNewContextOptions
-        {
-            AcceptDownloads = true
-        });
+        using IPlaywright playwright = await Microsoft.Playwright.Playwright.CreateAsync();
+
+        await using IBrowser browser = await playwright.LaunchStealthChromium();
+
+        IBrowserContext context = await browser.CreateStealthContext();
 
         IPage page = await context.NewPageAsync();
-        await page.GotoAsync("https://activeprospect.redoc.ly/docs/trustedform/api/v4.0/overview/");
+
+        await page.GotoAsync("https://activeprospect.redoc.ly/docs/trustedform/api/v4.0/overview/", new PageGotoOptions
+        {
+            WaitUntil = WaitUntilState.NetworkIdle,
+            Timeout = 60000
+        });
 
         IDownload download = await page.RunAndWaitForDownloadAsync(async () =>
         {
