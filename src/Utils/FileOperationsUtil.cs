@@ -3,7 +3,6 @@ using Microsoft.Playwright;
 using Soenneker.Extensions.String;
 using Soenneker.Extensions.ValueTask;
 using Soenneker.Git.Util.Abstract;
-using Soenneker.Playwright.Installation;
 using Soenneker.Playwright.Installation.Abstract;
 using Soenneker.Playwrights.Extensions.Stealth;
 using Soenneker.TrustedForm.Runners.OpenApi.Certificates.Utils.Abstract;
@@ -11,15 +10,14 @@ using Soenneker.Utils.Dotnet.Abstract;
 using Soenneker.Utils.Environment;
 using Soenneker.Utils.File.Abstract;
 using Soenneker.Utils.Json;
-using Soenneker.Utils.Path;
 using Soenneker.Utils.Path.Abstract;
 using Soenneker.Utils.Process.Abstract;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Soenneker.Extensions.Task;
 
 namespace Soenneker.TrustedForm.Runners.OpenApi.Certificates.Utils;
 
