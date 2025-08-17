@@ -98,7 +98,7 @@ public sealed class FileOperationsUtil : IFileOperationsUtil
         DeleteAllExceptCsproj(srcDirectory);
 
         await _processUtil.Start("kiota", gitDirectory,
-                              $"kiota generate -l CSharp -d \"{targetFilePath}\" -o src -c TrustedFormCertificatesOpenApiClient -n {Constants.Library}",
+                              $"kiota generate -l CSharp -d \"{targetFilePath}\" -o src -c TrustedFormCertificatesOpenApiClient -n {Constants.Library} --ebc --cc",
                               waitForExit: true,
                               cancellationToken: cancellationToken)
                           .NoSync();
