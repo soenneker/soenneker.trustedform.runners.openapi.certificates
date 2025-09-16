@@ -49,6 +49,6 @@
         <PackageReference Include="Soenneker.Playwright.Installation" Version="3.0.44" />
         <PackageReference Include="Soenneker.Playwrights.Extensions.Stealth" Version="3.0.14" />
         <PackageReference Include="Soenneker.Utils.File.Download" Version="3.0.1262" />
-        <PackageReference Include="Soenneker.Utils.Json" Version="3.0.2354" />
+        <PackageReference Include="Soenneker.Utils.Json" Version="3.0.2355" />
     </ItemGroup>
 </Project>
