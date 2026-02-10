@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Project Sdk="Microsoft.NET.Sdk">
+<?xml version="1.0" encoding="utf-8"?><Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -49,6 +49,7 @@
         <PackageReference Include="Soenneker.Playwright.Installation" Version="4.0.144" />
         <PackageReference Include="Soenneker.Playwrights.Extensions.Stealth" Version="4.0.38" />
         <PackageReference Include="Soenneker.Utils.File.Download" Version="4.0.1409" />
+        <PackageReference Include="Soenneker.Utils.Directory" Version="4.0.779" />
         <PackageReference Include="Soenneker.Utils.Json" Version="4.0.2399" />
     </ItemGroup>
 </Project>
