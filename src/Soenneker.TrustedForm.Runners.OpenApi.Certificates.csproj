@@ -46,7 +46,7 @@
         <PackageReference Include="Soenneker.Extensions.LoggerConfiguration" Version="4.0.1148" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.3" />
         <PackageReference Include="Soenneker.Managers.Runners" Version="4.0.1799" />
-        <PackageReference Include="Soenneker.Playwright.Installation" Version="4.0.165" />
+        <PackageReference Include="Soenneker.Playwright.Installation" Version="4.0.170" />
         <PackageReference Include="Soenneker.Playwrights.Extensions.Stealth" Version="4.0.40" />
         <PackageReference Include="Soenneker.Utils.File.Download" Version="4.0.1439" />
         <PackageReference Include="Soenneker.Utils.Json" Version="4.0.2423" />
