@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Soenneker.TrustedForm.Runners.OpenApi.Certificates.csproj" />
+        <ProjectReference Include="..\..\src\Soenneker.TrustedForm.Runners.OpenApi.Certificates\Soenneker.TrustedForm.Runners.OpenApi.Certificates.csproj" />
     </ItemGroup>
 
     <ItemGroup>
