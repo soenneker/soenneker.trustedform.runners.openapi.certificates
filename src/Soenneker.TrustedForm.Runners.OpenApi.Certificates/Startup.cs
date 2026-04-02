@@ -25,7 +25,7 @@ public static class Startup
                 .AddScoped<IFileOperationsUtil, FileOperationsUtil>()
                 .AddRunnersManagerAsScoped()
                 .AddFileDownloadUtilAsScoped()
-                .AddPlaywrightInstallationUtilAsSingleton();
+                .AddPlaywrightInstallationUtilAsSingleton()
                 .AddKiotaUtilAsScoped();
 
         return services;
