@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Playwright;
 using Soenneker.Extensions.String;
 using Soenneker.Extensions.ValueTask;
+using Soenneker.Kiota.Util.Abstract;
 using Soenneker.Git.Util.Abstract;
 using Soenneker.Playwright.Installation.Abstract;
 using Soenneker.Playwrights.Extensions.Stealth;
@@ -30,18 +31,20 @@ public sealed class FileOperationsUtil : IFileOperationsUtil
     private readonly IGitUtil _gitUtil;
     private readonly IDotnetUtil _dotnetUtil;
     private readonly IProcessUtil _processUtil;
+    private readonly IKiotaUtil _kiotaUtil;
     private readonly IFileUtil _fileUtil;
     private readonly IPlaywrightInstallationUtil _playwrightInstallationUtil;
     private readonly IPathUtil _pathUtil;
     private readonly IDirectoryUtil _directoryUtil;
 
     public FileOperationsUtil(ILogger<FileOperationsUtil> logger, IGitUtil gitUtil, IDotnetUtil dotnetUtil, IProcessUtil processUtil, IFileUtil fileUtil,
-        IPlaywrightInstallationUtil playwrightInstallationUtil, IPathUtil pathUtil, IDirectoryUtil directoryUtil)
+        IPlaywrightInstallationUtil playwrightInstallationUtil, IPathUtil pathUtil, IDirectoryUtil directoryUtil, IKiotaUtil kiotaUtil)
     {
         _logger = logger;
         _gitUtil = gitUtil;
         _dotnetUtil = dotnetUtil;
         _processUtil = processUtil;
+        _kiotaUtil = kiotaUtil;
         _fileUtil = fileUtil;
         _playwrightInstallationUtil = playwrightInstallationUtil;
         _pathUtil = pathUtil;
@@ -95,17 +98,13 @@ public sealed class FileOperationsUtil : IFileOperationsUtil
 
         await _fileUtil.Move(tempFilePath2, targetFilePath, cancellationToken: cancellationToken);
 
-        await _processUtil.Start("dotnet", null, "tool update --global Microsoft.OpenApi.Kiota", waitForExit: true, cancellationToken: cancellationToken);
+        await _kiotaUtil.EnsureInstalled(cancellationToken);
 
         string srcDirectory = Path.Combine(gitDirectory, "src", Constants.Library);
 
         await DeleteAllExceptCsproj(srcDirectory, cancellationToken);
 
-        await _processUtil.Start("kiota", gitDirectory,
-                              $"kiota generate -l CSharp -d \"{targetFilePath}\" -o src/{Constants.Library} -c TrustedFormCertificatesOpenApiClient -n {Constants.Library} --ebc --cc",
-                              waitForExit: true,
-                              cancellationToken: cancellationToken)
-                          .NoSync();
+        await _kiotaUtil.Generate(targetFilePath, "TrustedFormCertificatesOpenApiClient", Constants.Library, gitDirectory, cancellationToken).NoSync();
 
         await BuildAndPush(gitDirectory, cancellationToken).NoSync();
     }

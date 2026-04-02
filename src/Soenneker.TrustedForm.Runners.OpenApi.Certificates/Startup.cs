@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Soenneker.Kiota.Util.Registrars;
 using Soenneker.Managers.Runners.Registrars;
 using Soenneker.Playwright.Installation.Registrars;
 using Soenneker.TrustedForm.Runners.OpenApi.Certificates.Utils;
@@ -25,6 +26,7 @@ public static class Startup
                 .AddRunnersManagerAsScoped()
                 .AddFileDownloadUtilAsScoped()
                 .AddPlaywrightInstallationUtilAsSingleton();
+                .AddKiotaUtilAsScoped();
 
         return services;
     }
