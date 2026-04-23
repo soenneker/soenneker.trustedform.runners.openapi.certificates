@@ -1,17 +1,16 @@
-﻿using Soenneker.Tests.FixturedUnit;
-using Xunit;
+using Soenneker.Tests.HostedUnit;
 
 namespace Soenneker.TrustedForm.Runners.OpenApi.Certificates.Tests;
 
-[Collection("Collection")]
-public sealed class TrustedFormOpenApiRunnerTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public sealed class TrustedFormOpenApiRunnerTests : HostedUnitTest
 {
 
-    public TrustedFormOpenApiRunnerTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public TrustedFormOpenApiRunnerTests(Host host) : base(host)
     {
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
 

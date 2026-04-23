@@ -5,9 +5,6 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
-        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
-        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-        <TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
 
     </PropertyGroup>
 
@@ -23,19 +20,12 @@
 
     <ItemGroup>
         <PackageReference Include="Soenneker.Utils.Test" Version="4.0.316" />
-        <PackageReference Include="Soenneker.Tests.FixturedUnit" Version="4.0.2302" />
-        <PackageReference Include="xUnit.v3" Version="3.2.2" />
+        <PackageReference Include="Soenneker.Tests.HostedUnit" Version="4.0.14" />
+        <PackageReference Include="TUnit" Version="1.37.36" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference
             Include="..\..\src\Soenneker.TrustedForm.Runners.OpenApi.Certificates\Soenneker.TrustedForm.Runners.OpenApi.Certificates.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <Content Include="testconfig.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
-
 </Project>
