@@ -21,11 +21,10 @@
     <ItemGroup>
         <PackageReference Include="Soenneker.Utils.Test" Version="4.0.316" />
         <PackageReference Include="Soenneker.Tests.HostedUnit" Version="4.0.34" />
-        <PackageReference Include="TUnit" Version="1.43.11" />
+        <PackageReference Include="TUnit" Version="1.43.37" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference
-            Include="..\..\src\Soenneker.TrustedForm.Runners.OpenApi.Certificates\Soenneker.TrustedForm.Runners.OpenApi.Certificates.csproj" />
+        <ProjectReference Include="..\..\src\Soenneker.TrustedForm.Runners.OpenApi.Certificates\Soenneker.TrustedForm.Runners.OpenApi.Certificates.csproj" />
     </ItemGroup>
 </Project>
