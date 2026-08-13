@@ -49,12 +49,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.Extensions.LoggerConfiguration" Version="4.0.1319" />
+        <PackageReference Include="Soenneker.Extensions.LoggerConfiguration" Version="4.0.1321" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.11" />
-        <PackageReference Include="Soenneker.Kiota.Util" Version="4.0.81" />
-        <PackageReference Include="Soenneker.Managers.Runners" Version="4.0.2351" />
+        <PackageReference Include="Soenneker.Kiota.Util" Version="4.0.82" />
+        <PackageReference Include="Soenneker.Managers.Runners" Version="4.0.2358" />
         <PackageReference Include="Soenneker.Playwright.Installation" Version="4.0.249" />
         <PackageReference Include="Soenneker.Playwrights.Extensions.Stealth" Version="4.0.115" />
-        <PackageReference Include="Soenneker.Utils.Json" Version="4.0.2625" />
+        <PackageReference Include="Soenneker.Utils.Json" Version="4.0.2629" />
     </ItemGroup>
 </Project>
