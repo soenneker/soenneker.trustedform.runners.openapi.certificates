@@ -24,7 +24,6 @@ using Soenneker.Extensions.Task;
 
 namespace Soenneker.TrustedForm.Runners.OpenApi.Certificates.Utils;
 
-///<inheritdoc cref="IFileOperationsUtil"/>
 public sealed class FileOperationsUtil : IFileOperationsUtil
 {
     private readonly ILogger<FileOperationsUtil> _logger;
@@ -116,54 +115,28 @@ public sealed class FileOperationsUtil : IFileOperationsUtil
     public async ValueTask DeleteAllExceptCsproj(string directoryPath, CancellationToken cancellationToken = default)
     {
         if (!(await _directoryUtil.Exists(directoryPath, cancellationToken)))
-        {
-            _logger.LogWarning("Directory does not exist: {DirectoryPath}", directoryPath);
-            return;
-        }
+            throw new DirectoryNotFoundException($"The generated-client source directory does not exist: {directoryPath}");
 
-        try
+        List<string> files = await _directoryUtil.GetFilesByExtension(directoryPath, "", true, cancellationToken);
+        foreach (string file in files)
         {
-            // Delete all files except .csproj
-            List<string> files = await _directoryUtil.GetFilesByExtension(directoryPath, "", true, cancellationToken);
-            foreach (string file in files)
+            if (!file.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase))
             {
-                if (!file.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase))
-                {
-                    try
-                    {
-                        await _fileUtil.Delete(file, ignoreMissing: true, log: false, cancellationToken);
-                        _logger.LogInformation("Deleted file: {FilePath}", file);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Failed to delete file: {FilePath}", file);
-                    }
-                }
-            }
-
-            // Delete all empty subdirectories
-            List<string> dirs = await _directoryUtil.GetAllDirectoriesRecursively(directoryPath, cancellationToken);
-            foreach (string dir in dirs.OrderByDescending(d => d.Length)) // Sort by depth to delete from deepest first
-            {
-                try
-                {
-                    List<string> dirFiles = await _directoryUtil.GetFilesByExtension(dir, "", false, cancellationToken);
-                    List<string> subDirs = await _directoryUtil.GetAllDirectories(dir, cancellationToken);
-                    if (dirFiles.Count == 0 && subDirs.Count == 0)
-                    {
-                        await _directoryUtil.Delete(dir, cancellationToken);
-                        _logger.LogInformation("Deleted empty directory: {DirectoryPath}", dir);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Failed to delete directory: {DirectoryPath}", dir);
-                }
+                await _fileUtil.Delete(file, ignoreMissing: true, log: false, cancellationToken);
+                _logger.LogInformation("Deleted file: {FilePath}", file);
             }
         }
-        catch (Exception ex)
+
+        List<string> dirs = await _directoryUtil.GetAllDirectoriesRecursively(directoryPath, cancellationToken);
+        foreach (string dir in dirs.OrderByDescending(d => d.Length))
         {
-            _logger.LogError(ex, "An error occurred while cleaning the directory: {DirectoryPath}", directoryPath);
+            List<string> dirFiles = await _directoryUtil.GetFilesByExtension(dir, "", false, cancellationToken);
+            List<string> subDirs = await _directoryUtil.GetAllDirectories(dir, cancellationToken);
+            if (dirFiles.Count == 0 && subDirs.Count == 0)
+            {
+                await _directoryUtil.Delete(dir, cancellationToken);
+                _logger.LogInformation("Deleted empty directory: {DirectoryPath}", dir);
+            }
         }
     }
 
@@ -176,10 +149,7 @@ public sealed class FileOperationsUtil : IFileOperationsUtil
         bool successful = await _dotnetUtil.Build(projFilePath, true, "Release", false, cancellationToken: cancellationToken);
 
         if (!successful)
-        {
-            _logger.LogError("Build was not successful, exiting...");
-            return;
-        }
+            throw new InvalidOperationException("The generated TrustedForm Certificate API client did not build successfully.");
 
         string gitHubToken = EnvironmentUtil.GetVariableStrict("GH__TOKEN");
         string name = EnvironmentUtil.GetVariableStrict("GIT__NAME");
