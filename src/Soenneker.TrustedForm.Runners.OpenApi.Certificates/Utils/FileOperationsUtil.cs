@@ -24,6 +24,7 @@ using Soenneker.Extensions.Task;
 
 namespace Soenneker.TrustedForm.Runners.OpenApi.Certificates.Utils;
 
+/// <inheritdoc cref="IFileOperationsUtil" />
 public sealed class FileOperationsUtil : IFileOperationsUtil
 {
     private readonly ILogger<FileOperationsUtil> _logger;
