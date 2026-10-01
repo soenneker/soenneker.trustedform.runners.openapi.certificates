@@ -52,7 +52,7 @@
     <ItemGroup>
         <PackageReference Include="Soenneker.Extensions.LoggerConfiguration" Version="4.0.1406" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
-        <PackageReference Include="Soenneker.Kiota.Util" Version="4.0.142" />
+        <PackageReference Include="Soenneker.Kiota.Util" Version="4.0.143" />
         <PackageReference Include="Soenneker.Managers.Runners" Version="4.0.2571" />
         <PackageReference Include="Soenneker.Playwright.Installation" Version="4.0.249" />
         <PackageReference Include="Soenneker.Playwrights.Extensions.Stealth" Version="4.0.155" />
