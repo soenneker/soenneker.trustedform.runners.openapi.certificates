@@ -59,7 +59,7 @@
         <PackageReference Include="Soenneker.Utils.Json" Version="4.0.2735" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Soenneker.Enums.DeployEnvironment" Version="4.0.245" />
+        <PackageReference Include="Soenneker.Enums.DeployEnvironment" Version="4.0.246" />
         <PackageReference Include="Soenneker.Extensions.ValueTask" Version="4.0.124" />
     </ItemGroup>
 </Project>
