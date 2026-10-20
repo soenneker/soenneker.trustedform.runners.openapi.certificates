@@ -1,7 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Soenneker.Kiota.Util.Registrars;
 using Soenneker.Managers.Runners.Registrars;
-using Soenneker.Playwright.Installation.Registrars;
+using Soenneker.Utils.File.Download.Registrars;
+using Soenneker.Utils.Yaml.Registrars;
 using Soenneker.TrustedForm.Runners.OpenApi.Certificates.Utils;
 using Soenneker.TrustedForm.Runners.OpenApi.Certificates.Utils.Abstract;
 
@@ -32,7 +33,8 @@ public static class Startup
         services.AddHostedService<ConsoleHostedService>()
                 .AddSingleton<IFileOperationsUtil, FileOperationsUtil>()
                 .AddRunnersManagerAsSingleton()
-                .AddPlaywrightInstallationUtilAsSingleton()
+                .AddFileDownloadUtilAsSingleton()
+                .AddYamlUtilAsSingleton()
                 .AddKiotaUtilAsSingleton();
 
         return services;

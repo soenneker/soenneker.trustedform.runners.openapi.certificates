@@ -1,11 +1,10 @@
 using Microsoft.Extensions.Logging;
-using Microsoft.Playwright;
 using Soenneker.Extensions.String;
 using Soenneker.Extensions.ValueTask;
 using Soenneker.Kiota.Util.Abstract;
 using Soenneker.Git.Util.Abstract;
-using Soenneker.Playwright.Installation.Abstract;
-using Soenneker.Playwrights.Extensions.Stealth;
+using Soenneker.Utils.File.Download.Abstract;
+using Soenneker.Utils.Yaml.Abstract;
 using Soenneker.TrustedForm.Runners.OpenApi.Certificates.Utils.Abstract;
 using Soenneker.Utils.Dotnet.Abstract;
 using Soenneker.Utils.Environment;
@@ -24,7 +23,6 @@ using Soenneker.Extensions.Task;
 
 namespace Soenneker.TrustedForm.Runners.OpenApi.Certificates.Utils;
 
-/// <inheritdoc cref="IFileOperationsUtil" />
 public sealed class FileOperationsUtil : IFileOperationsUtil
 {
     private readonly ILogger<FileOperationsUtil> _logger;
@@ -32,53 +30,35 @@ public sealed class FileOperationsUtil : IFileOperationsUtil
     private readonly IDotnetUtil _dotnetUtil;
     private readonly IKiotaUtil _kiotaUtil;
     private readonly IFileUtil _fileUtil;
-    private readonly IPlaywrightInstallationUtil _playwrightInstallationUtil;
+    private readonly IFileDownloadUtil _fileDownloadUtil;
+    private readonly IYamlUtil _yamlUtil;
     private readonly IPathUtil _pathUtil;
     private readonly IDirectoryUtil _directoryUtil;
 
     public FileOperationsUtil(ILogger<FileOperationsUtil> logger, IGitUtil gitUtil, IDotnetUtil dotnetUtil, IFileUtil fileUtil,
-        IPlaywrightInstallationUtil playwrightInstallationUtil, IPathUtil pathUtil, IDirectoryUtil directoryUtil, IKiotaUtil kiotaUtil)
+        IFileDownloadUtil fileDownloadUtil, IYamlUtil yamlUtil, IPathUtil pathUtil, IDirectoryUtil directoryUtil, IKiotaUtil kiotaUtil)
     {
         _logger = logger;
         _gitUtil = gitUtil;
         _dotnetUtil = dotnetUtil;
         _kiotaUtil = kiotaUtil;
         _fileUtil = fileUtil;
-        _playwrightInstallationUtil = playwrightInstallationUtil;
+        _fileDownloadUtil = fileDownloadUtil;
+        _yamlUtil = yamlUtil;
         _pathUtil = pathUtil;
         _directoryUtil = directoryUtil;
     }
 
     public async ValueTask Process(CancellationToken cancellationToken = default)
     {
-        await _playwrightInstallationUtil.EnsureInstalled(cancellationToken);
-
-        using IPlaywright playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-
-        await using IBrowser browser = await playwright.LaunchStealthChromium();
-
-        IBrowserContext context = await browser.CreateStealthContext();
-
-        IPage page = await context.NewPageAsync();
-
-        await page.GotoAsync("https://activeprospect.redoc.ly/docs/trustedform/api/v4.0/overview/", new PageGotoOptions
-        {
-            WaitUntil = WaitUntilState.NetworkIdle,
-            Timeout = 60000
-        });
-
-        IDownload download = await page.RunAndWaitForDownloadAsync(async () =>
-        {
-            // Adjust selector if needed
-            await page.ClickAsync("a[download='swagger.json']");
-        });
+        string? yamlPath = await _fileDownloadUtil.Download(
+            "https://developers.activeprospect.com/api-reference/claims_api-v4.yaml",
+            fileExtension: "yaml", cancellationToken: cancellationToken);
+        if (string.IsNullOrWhiteSpace(yamlPath))
+            throw new InvalidOperationException("The TrustedForm v4 OpenAPI specification could not be downloaded.");
 
         string tempFilePath1 = await _pathUtil.GetRandomTempFilePath("json", cancellationToken);
-
-        _ = await download.PathAsync();
-
-        await download.SaveAsAsync(tempFilePath1);
-
+        await _yamlUtil.SaveAsJson(yamlPath, tempFilePath1, true, cancellationToken);
         string content = await _fileUtil.Read(tempFilePath1, cancellationToken: cancellationToken).NoSync();
 
         using System.Text.Json.JsonDocument document = System.Text.Json.JsonDocument.Parse(content);
