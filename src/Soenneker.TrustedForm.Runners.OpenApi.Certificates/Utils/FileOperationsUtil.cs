@@ -1,3 +1,4 @@
+using Soenneker.OpenApi.Fixer.Abstract;
 using Microsoft.Extensions.Logging;
 using Soenneker.Extensions.String;
 using Soenneker.Extensions.ValueTask;
@@ -29,6 +30,7 @@ public sealed class FileOperationsUtil : IFileOperationsUtil
     private readonly IGitUtil _gitUtil;
     private readonly IDotnetUtil _dotnetUtil;
     private readonly IKiotaUtil _kiotaUtil;
+    private readonly IOpenApiFixer _openApiFixer;
     private readonly IFileUtil _fileUtil;
     private readonly IFileDownloadUtil _fileDownloadUtil;
     private readonly IYamlUtil _yamlUtil;
@@ -36,12 +38,13 @@ public sealed class FileOperationsUtil : IFileOperationsUtil
     private readonly IDirectoryUtil _directoryUtil;
 
     public FileOperationsUtil(ILogger<FileOperationsUtil> logger, IGitUtil gitUtil, IDotnetUtil dotnetUtil, IFileUtil fileUtil,
-        IFileDownloadUtil fileDownloadUtil, IYamlUtil yamlUtil, IPathUtil pathUtil, IDirectoryUtil directoryUtil, IKiotaUtil kiotaUtil)
+        IFileDownloadUtil fileDownloadUtil, IYamlUtil yamlUtil, IPathUtil pathUtil, IDirectoryUtil directoryUtil, IKiotaUtil kiotaUtil, IOpenApiFixer openApiFixer)
     {
         _logger = logger;
         _gitUtil = gitUtil;
         _dotnetUtil = dotnetUtil;
         _kiotaUtil = kiotaUtil;
+        _openApiFixer = openApiFixer;
         _fileUtil = fileUtil;
         _fileDownloadUtil = fileDownloadUtil;
         _yamlUtil = yamlUtil;
@@ -84,6 +87,7 @@ public sealed class FileOperationsUtil : IFileOperationsUtil
         await DeleteAllExceptCsproj(srcDirectory, cancellationToken);
 
         await _kiotaUtil.Generate(targetFilePath, "TrustedFormCertificatesOpenApiClient", Constants.Library, gitDirectory, cancellationToken).NoSync();
+        await _openApiFixer.SanitizeGeneratedEnumMembers(Path.Combine(gitDirectory, "src", Constants.Library), cancellationToken).NoSync();
 
         await BuildAndPush(gitDirectory, cancellationToken).NoSync();
     }
