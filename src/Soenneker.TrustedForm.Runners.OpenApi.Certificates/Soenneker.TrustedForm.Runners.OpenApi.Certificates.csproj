@@ -56,7 +56,7 @@
         <PackageReference Include="Soenneker.Kiota.Util" Version="11.0.175" />
         <PackageReference Include="Soenneker.Managers.Runners" Version="11.0.2667" />
         <PackageReference Include="Soenneker.Utils.File.Download" Version="11.0.1834" />
-        <PackageReference Include="Soenneker.Utils.Yaml" Version="11.0.237" />
+        <PackageReference Include="Soenneker.Utils.Yaml" Version="11.0.238" />
         <PackageReference Include="Soenneker.Utils.Json" Version="11.0.2769" />
     </ItemGroup>
     <ItemGroup>
