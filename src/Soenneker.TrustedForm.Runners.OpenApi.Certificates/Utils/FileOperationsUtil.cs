@@ -80,13 +80,16 @@ public sealed class FileOperationsUtil : IFileOperationsUtil
 
         await _fileUtil.Move(tempFilePath2, targetFilePath, cancellationToken: cancellationToken);
 
+        string fixedFilePath = Path.Combine(gitDirectory, "fixed.json");
+        await _openApiFixer.Fix(targetFilePath, fixedFilePath, cancellationToken).NoSync();
+
         await _kiotaUtil.EnsureInstalled(cancellationToken);
 
         string srcDirectory = Path.Combine(gitDirectory, "src", Constants.Library);
 
         await DeleteAllExceptCsproj(srcDirectory, cancellationToken);
 
-        await _kiotaUtil.Generate(targetFilePath, "TrustedFormCertificatesOpenApiClient", Constants.Library, gitDirectory, cancellationToken).NoSync();
+        await _kiotaUtil.Generate(fixedFilePath, "TrustedFormCertificatesOpenApiClient", Constants.Library, gitDirectory, cancellationToken).NoSync();
         await _openApiFixer.SanitizeGeneratedEnumMembers(Path.Combine(gitDirectory, "src", Constants.Library), cancellationToken).NoSync();
 
         await BuildAndPush(gitDirectory, cancellationToken).NoSync();
